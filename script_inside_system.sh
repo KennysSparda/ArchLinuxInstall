@@ -115,8 +115,8 @@ function BasicConfigs() {
 
 function MyCustomWM() {
 	pacman -S git xorg-server xorg-xinit nitrogen i3-gaps i3status dmenu ttf-nerd-fonts-symbols-mono ttf-inconsolata konsole
-	cd /home/$username
-	git clone https://aur.archlinux.org/yay.git
+	touch /home/$username/yay_install.txt
+	echo "git clone https://aur.archlinux.org/yay.git" > /home/$username/yay_install.txt
 	git clone https://github.com/KennysSparda/dotfiles	
 	mkdir /home/$username/.config
 	mkdir /home/$username/.config/i3
@@ -126,22 +126,23 @@ function MyCustomWM() {
 	touch /home/$username/.xinitrc
 	echo "exec i3" > /home/$username/.xinitrc
 	mv -r Pictures /home/$username/Pictures
+	rm -rf dotfiles
 }
 
 
 
 function Main() {
-	#InstallGrub
-	#MakeGrubConfig
-	#SetRootPassWd
+	InstallGrub
+	MakeGrubConfig
+	SetRootPassWd
 
 	echo "insira o nome de usuario: "
 	read username
 
-	#AddNewUser
-	#EnableNet
-	#DriverVideo
-	#BasicConfigs
+	AddNewUser
+	EnableNet
+	DriverVideo
+	BasicConfigs
 	MyCustomWM
 }
 
