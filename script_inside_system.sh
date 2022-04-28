@@ -125,7 +125,10 @@ function MyCustomWM() {
 	mv dotfiles/.config/i3/config /home/$username/.config/i3/config
 	touch /home/$username/.xinitrc
 	echo "exec i3" > /home/$username/.xinitrc
+	mv -r Pictures /home/$username/Pictures
 }
+
+
 
 function Main() {
 	#InstallGrub
