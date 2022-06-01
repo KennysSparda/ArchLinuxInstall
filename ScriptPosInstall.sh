@@ -114,7 +114,7 @@ function BasicConfigs() {
 }
 
 function MyCustomWM() {
-	pacman -S git iwd xorg-server xorg-xinit nitrogen i3-gaps i3status dmenu ttf-nerd-fonts-symbols-mono ttf-inconsolata konsole
+	pacman -S git iwd xorg-server xorg-xinit nitrogen i3-gaps i3status dmenu pulseaudio alsa ttf-nerd-fonts-symbols-mono ttf-inconsolata konsole 
 	touch /home/$username/yay_install.txt
 	echo "git clone https://aur.archlinux.org/yay.git" > /home/$username/yay_install.txt
 	git clone https://github.com/KennysSparda/dotfiles	
