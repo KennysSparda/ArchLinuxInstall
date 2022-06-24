@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Add to /etc/pacman.conf line for parallel downloads
+echo "ParallelDownloads = 10" >> /etc/pacman.conf
+
 # Packages to install for base system
 pacstrap /mnt base base-devel linux linux-firmware
 

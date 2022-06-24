@@ -3,6 +3,10 @@
 # pos instalacao do meu sistema preferido:
 # ARCH LINUX
 
+function ParallelDownloads() {
+  echo "ParallelDownloads = 25" >> /etc/pacman.conf
+}
+
 function InstallGrub() {
   pacman -S grub
 	echo -e """
@@ -156,6 +160,7 @@ function BasicConfigs() {
 }
 
 function Main() {
+  ParallelDownloads
 	InstallGrub
 	MakeGrubConfig
 	SetRootPassWd
