@@ -4,6 +4,7 @@
 # ARCH LINUX
 
 function InstallGrub() {
+  pacman -S grub
 	echo -e """
 	Que forma pretende instalar o grub?
 	[ 1 ] BIOS LEGACY
@@ -13,6 +14,7 @@ function InstallGrub() {
 	if [[ $opc = 1 ]]
        	then
 		echo "BIOS LEGACY"
+    lsblk
 		echo "Insira a unidade que sera instalado o sistema: /dev/?"
 		read device
 		grub-install --target=i386-pc --recheck /dev/$device
@@ -60,8 +62,23 @@ function AddNewUser() {
 }
 
 function EnableNet() {
-	# Instalando drivers de internet
-	systemctl enable NetworkManager
+	# Habilitando drivers de internet
+ 	systemctl enable NetworkManager
+  
+  # Habilitando suporte a wifi
+  echo """Vai utilizar driver wifi?
+  [ s ] Sim
+  [ n ] Nao
+  """
+  read opc
+
+  if [[ $opc = "s" ]]
+  then
+    systemctl enable iwd
+  fi
+
+  # Habilitando driver para configuracao do DNS da rede
+  systemctl enable dhcpcd
 }
 
 function DriverVideo() {
@@ -80,17 +97,33 @@ function DriverVideo() {
 		sudo pacman -S nvidia nvidia-settings
 	elif [[ $opc = 3 ]] 
 	then
-		sudo pacman -S xf86-video-amdgpu
+		pacman -S xf86-video-amdgpu
 	else
 		echo "Opcao invalida amiguinho tente novamente :3"
 		DriverVideo
 	fi
 }
 
-function BasicConfigs() {
-	ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
-	hwclock --systohc
-	
+function Linguagem() {
+	echo """
+	Linguagem do sistema ?
+	[ 1 ] Portugues Brasileiro
+	[ 2 ] Ingles
+	"""
+	read opc
+	if [[ $opc = 1 ]]
+	then
+		echo "pt_BR.UTF-8 UTF-8" >> /etc/locale.gen
+	elif [[ $opc = 2 ]]
+	then
+		echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+	else
+		echo "Opcao invalida amiguinho tente novamente"
+		Linguagem
+	fi
+}
+
+function Layout() {
 	echo """
 	Layout do teclado ?
 	[ 1 ] BR
@@ -99,51 +132,43 @@ function BasicConfigs() {
 	read opc
 	if [[ $opc = 1 ]]
 	then
-		echo "pt_BR.UTF-8 UTF-8" >> /etc/locale.gen
 		echo "KEYMAP=br-abnt2" >> /etc/vconsole.conf
 	elif [[ $opc = 2 ]]
 	then
-		echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 		echo "KEYMAP=us" >> /etc/vconsole.conf
-	fi
+  else
+    echo "Opcao errada amiguinho tente novamente"
+		Layout
+  fi
 	locale-gen
+
+}
+
+function BasicConfigs() {
+	Linguagem
+	Layout
+	ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+	hwclock --systohc
 	echo "Insira o nome do PC: "
 	read pcname
 	echo $pcname >> /etc/hostname
 	echo "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers	
 }
 
-function MyCustomWM() {
-	pacman -S git iwd xorg-server xorg-xinit nitrogen i3-gaps i3status dmenu pulseaudio alsa ttf-nerd-fonts-symbols-mono ttf-inconsolata konsole 
-	touch /home/$username/yay_install.txt
-	echo "git clone https://aur.archlinux.org/yay.git" > /home/$username/yay_install.txt
-	git clone https://github.com/KennysSparda/dotfiles	
-	mkdir /home/$username/.config
-	mkdir /home/$username/.config/i3
-	mv dotfiles/.vimrc /home/$username/.vimrc
-	mv dotfiles/i3status.conf /home/$username/.i3status.conf
-	mv dotfiles/.config/i3/config /home/$username/.config/i3/config
-	touch /home/$username/.xinitrc
-	echo "exec i3" > /home/$username/.xinitrc
-	mv -f Pictures /home/$username/Pictures
-	rm -rf dotfiles
-}
-
-
-
 function Main() {
 	InstallGrub
 	MakeGrubConfig
 	SetRootPassWd
 
-	echo "insira o nome de usuario: "
+	echo -e "insira o nome de usuario: \n=> "
 	read username
 
 	AddNewUser
 	EnableNet
 	DriverVideo
+
 	BasicConfigs
-	MyCustomWM
 }
 
 Main
+
