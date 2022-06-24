@@ -4,6 +4,7 @@
 # ARCH LINUX
 
 function ParallelDownloads() {
+	echo "[options]" >> /etc/pacman.conf
   echo "ParallelDownloads = 25" >> /etc/pacman.conf
 }
 

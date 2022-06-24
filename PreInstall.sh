@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Add to /etc/pacman.conf line for parallel downloads
+echo "[options]" >> /etc/pacman.conf
 echo "ParallelDownloads = 10" >> /etc/pacman.conf
 
 # Packages to install for base system
