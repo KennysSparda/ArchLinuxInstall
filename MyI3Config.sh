@@ -19,14 +19,22 @@ function Downloads() {
 }
 
 function Installs() {
+
+  ### Creating diretories ###
   mkdir ~/.config/
   mkdir ~/.config/i3
-  mv dotfiles/.config/i3/config .config/i3/config
-  mv dotfiles/i3status.conf ~/.i3status.conf
+
+  ### Install the configurations ###
+  mv dotfiles/.config/i3/config ~/.config/i3/config
+  mv -f dotfiles/.config/automountp/ ~/.config/
+  mv -f dotfiles/.config/wallpaper ~/.config
+  mv dotfiles/.i3status.conf ~/.i3status.conf
   mv dotfiles/.vimrc ~/.vimrc
+  mv dotfiles/.zshrc ~/.zshrc
+
+  ### Creating the file to start Xorg session ###
   touch ~/.xinitrc
   echo "exec i3" > ~/.xinitrc
-  mv -f dotfiles/Pictures ~/Pictures
 }
 
 function Clear() {
